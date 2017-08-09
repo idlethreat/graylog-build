@@ -23,7 +23,7 @@ In our example, 192.168.1.1 will be our app server, and 192.168.1.2 will be the 
 
 ### Initial Setup (run on both app and db servers)
 1. `apt-get install git -y`
-2. `git clone http://whatever/graylog-build.git`
+2. `git clone https://github.com/idlethreat/graylog-build.git`
 3. `cd graylog-build/`
 
 ### Setup App Server
