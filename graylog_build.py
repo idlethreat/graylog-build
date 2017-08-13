@@ -67,7 +67,7 @@ def installDB(myIP):
     if aptGetUpdate !=0:
         sys.exit("### apt-get update failed! Check out the errors above!")
     
-    aptGetInstallPackages = subprocess.call('apt-get install apt-transport-https openjdk-8-jre-headless uuid-runtime pwgen mongodb-server -y', shell=True)
+    aptGetInstallPackages = subprocess.call('apt-get install apt-transport-https openjdk-8-jre-headless uuid-runtime pwgen -y', shell=True)
     if aptGetInstallPackages !=0:
         sys.exit("### apt-get install packages failed! Check out the errors above!")
     
@@ -148,12 +148,21 @@ def installApp(myIP,myPass):
     dpkgInstall = subprocess.call(dpkgInstallBuild, shell=True)
     if dpkgInstall !=0:
         sys.exit("### Graylog package install failed! Check out the errors above!")
+        
     
-    aptGetUpdate = subprocess.call('apt-get update', shell=True)
-    if aptGetUpdate !=0:
-        sys.exit("### apt-get update failed! Check out the errors above!")
-    
-    aptGetInstallRequirements = subprocess.call('apt-get install openjdk-8-jre-headless mongodb-server pwgen -y', shell=True)
+    ###
+    # MongoDB 3.4 Install and setup
+    print ("### Setting up MongoDB...")
+    subprocess.call('sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 0C49F3730359A14518585931BC711F9BA15703C6', shell=True)
+    subprocess.call('echo "deb [ arch=amd64,arm64 ] http://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.4 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.4.list',shell=True)
+    subprocess.call('apt-get update', shell=True)
+    subprocess.call('apt-get install -y mongodb-org', shell=True)
+    subprocess.call('systemctl enable mongod.service', shell=True)
+    subprocess.call('service mongod start', shell=True)   
+    print ("### MongoDB setup complete!")
+    ###
+        
+    aptGetInstallRequirements = subprocess.call('apt-get install openjdk-8-jre-headless pwgen -y', shell=True)
     if aptGetInstallRequirements !=0:
         sys.exit("### install requirements failed! Check out the errors above!")
         

@@ -13,9 +13,8 @@ Plans are to keep tracking the latest version available at [https://www.graylog.
 
 * Ubuntu 16.04 LTS
 * Graylog v2.3.0
-* Mongodb 2.6.10
+* Mongodb 3.4.7
 * Elasticsearch 2.4.6
-
 
 ## Instructions
 
@@ -23,7 +22,7 @@ In our example, 192.168.1.1 will be our app server, and 192.168.1.2 will be the 
 
 ### Initial Setup (run on both app and db servers)
 1. `apt-get install git -y`
-2. `git clone https://github.com/idlethreat/graylog-build.git`
+2. `git clone git clone https://github.com/idlethreat/graylog-build.git`
 3. `cd graylog-build/`
 
 ### Setup App Server
@@ -46,3 +45,7 @@ To setup Elasticsearch on the db server, you'll need to give it the IP of the AP
 
 Auto install takes about 2 minutes. Elasticsearch auto-starts after install and configuration is complete.
 
+### Version History
+
+* 0.0 - initial release
+* 0.1 - updated script to install latest MongoDB (3.4.7) from mongodb.org instead of using the older default 16.04 packages
