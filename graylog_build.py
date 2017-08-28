@@ -36,20 +36,23 @@ def configureDB(myIP):
         filedata = file.read()
     
     # Replace the target string
-    filedata = filedata.replace('# cluster.name: my-application','cluster.name: graylog')
+    filedata = filedata.replace('#cluster.name: my-application','cluster.name: graylog')
     
     # Replace the target string
     myNetworkHost = getIpAddress()
     myNetworkHostInsert = 'network.host: {0}'.format(myNetworkHost)
-    filedata = filedata.replace('# network.host: 192.168.0.1', myNetworkHostInsert)
-    
-    
+    filedata = filedata.replace('#network.host: 192.168.0.1', myNetworkHostInsert)
+        
     filedata = filedata.encode('ascii',errors='ignore')
     
     filedata = filedata.decode('ascii')
     
     with open('/etc/elasticsearch/elasticsearch.yml', 'w') as file:
         file.write(str(filedata))
+    
+    print ('### Configuring system memory')
+    subprocess.call('sysctl -w vm.max_map_count=262144',shell=True)
+    subprocess.call('echo "vm.max_map_count=262144" >> /etc/sysctl.conf',shell=True)
     
     print ('### Setting up Elasticsearch to start on boot')
     subprocess.call('systemctl daemon-reload',shell=True)
@@ -67,16 +70,21 @@ def installDB(myIP):
     if aptGetUpdate !=0:
         sys.exit("### apt-get update failed! Check out the errors above!")
     
-    aptGetInstallPackages = subprocess.call('apt-get install apt-transport-https openjdk-8-jre-headless uuid-runtime pwgen -y', shell=True)
+    aptGetInstallPackages = subprocess.call('apt-get install apt-transport-https openjdk-8-jre-headless uuid-runtime -y', shell=True)
     if aptGetInstallPackages !=0:
         sys.exit("### apt-get install packages failed! Check out the errors above!")
     
     print ("### Setting up Elasticsearch...")
-    subprocess.call('wget -qO - https://packages.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -',shell=True)
-    subprocess.call('echo "deb https://packages.elastic.co/elasticsearch/2.x/debian stable main" | sudo tee -a /etc/apt/sources.list.d/elasticsearch-2.x.list',shell=True)
-    subprocess.call('sudo apt-get update && sudo apt-get install elasticsearch',shell=True)
+    
+    # Elasticsearch 5 Install
+    subprocess.call('wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -',shell=True)
+    subprocess.call('echo "deb https://artifacts.elastic.co/packages/5.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-5.x.list',shell=True)
+    subprocess.call('apt-get update && sudo apt-get install elasticsearch',shell=True)
+    subprocess.call('systemctl daemon-reload',shell=True)
+    subprocess.call('systemctl enable elasticsearch.service',shell=True)  
     
     configureDB(myIP)
+
 
 ####################################################################################################################################################
 def configureApp(myIP,myPass):
@@ -196,4 +204,3 @@ if sys.argv[1] == "app":
 if sys.argv[1] == "db":
     myIP = sys.argv[2]
     installDB(myIP)
-    print ("### db")
