@@ -12,7 +12,7 @@ Plans are to keep tracking the latest version available at [https://www.graylog.
 ## Build Target
 
 * Ubuntu 16.04 LTS
-* Graylog v2.3.1
+* Graylog v2.4
 * Mongodb 3.4.7
 * Elasticsearch 5.5.2
 
@@ -50,3 +50,4 @@ Auto install takes about 2 minutes. Elasticsearch auto-starts after install and 
 * 0.0 - initial release
 * 0.1 - updated script to install latest MongoDB (3.4.7) from mongodb.org instead of using the older default 16.04 packages
 * 0.2 - updated script to install latest Graylog (2.3.1) as well as the latest Elasticsearch (5.5.2). ES install routine adjusted, new memory mapping items added, too.
+* 0.3 - updated script to install latest Graylog (2.4). No other changes.

@@ -11,8 +11,8 @@ import socket
 ####################################################################################################################################################
 # Variables!
 
-graylogRepoUrl = "https://packages.graylog2.org/repo/packages/graylog-2.3-repository_latest.deb"
-graylogArchiveName = "graylog-2.3-repository_latest.deb"
+graylogRepoUrl = "https://packages.graylog2.org/repo/packages/graylog-2.4-repository_latest.deb"
+graylogArchiveName = "graylog-2.4-repository_latest.deb"
 
 ####################################################################################################################################################
 
