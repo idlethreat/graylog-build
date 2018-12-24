@@ -11,8 +11,8 @@ import socket
 ####################################################################################################################################################
 # Variables!
 
-graylogRepoUrl = "https://packages.graylog2.org/repo/packages/graylog-2.4-repository_latest.deb"
-graylogArchiveName = "graylog-2.4-repository_latest.deb"
+graylogRepoUrl = "https://packages.graylog2.org/repo/packages/graylog-2.5-repository_latest.deb"
+graylogArchiveName = "graylog-2.5-repository_latest.deb"
 
 ####################################################################################################################################################
 
@@ -78,7 +78,7 @@ def installDB(myIP):
     
     # Elasticsearch 5 Install
     subprocess.call('wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -',shell=True)
-    subprocess.call('echo "deb https://artifacts.elastic.co/packages/5.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-5.x.list',shell=True)
+    subprocess.call('echo "deb https://artifacts.elastic.co/packages/6.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-6.x.list',shell=True)
     subprocess.call('apt-get update && sudo apt-get install elasticsearch',shell=True)
     subprocess.call('systemctl daemon-reload',shell=True)
     subprocess.call('systemctl enable elasticsearch.service',shell=True)  
@@ -136,6 +136,9 @@ def configureApp(myIP,myPass):
     
     with open('/etc/graylog/server/server.conf', 'w') as file:
         file.write(str(filedata))
+    
+    print ('### Setting up Graylog-Server to start on boot')
+    subprocess.call('systemctl enable graylog-server',shell=True)
 
     
 ####################################################################################################################################################
