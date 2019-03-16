@@ -1,6 +1,8 @@
 # Graylog Build Harness
 
-I manage a number of Graylog servers at work, and occasionally spin up VM's for various projects. I had a need to quickly push out a new Graylog system with little human intervention.
+I manage a number of Graylog servers at work, and occasionally spin up VM's for various projects. I had a need to quickly push out a new Graylog system with little human intervention. 
+
+Script currently targets [Ubuntu Linux 18.04](https://www.ubuntu.com/)
 
 This script helps automate a two server build-out of Graylog. The components are:
 
