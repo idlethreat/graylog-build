@@ -11,16 +11,16 @@ Plans are to keep tracking the latest version available at [https://www.graylog.
 
 ## Build Target
 
-* Ubuntu 16.04 LTS
-* Graylog v2.5 (Released Dec 1, 2018)
-* Mongodb 3.4.7
-* Elasticsearch 6.5.3
+* Ubuntu 18.04 LTS (Bionic)
+* Graylog v3.0 (Released Feb, 2019)
+* Mongodb 4.0.6
+* Elasticsearch 6.6.1
 
 ## Instructions
 
-In our example, 192.168.1.1 will be our app server, and 192.168.1.2 will be the DB server. From a fresh install, run the following commands:
+In our below example, 192.168.1.1 will be our __app__ server, and 192.168.1.2 will be the __DB__ server. From a fresh install, run the following commands:
 
-### Initial Setup 
+### [Step 0] Initial Setup
 
 _run the following commands on both app and db servers_
 
@@ -28,7 +28,17 @@ _run the following commands on both app and db servers_
 2. `git clone https://github.com/idlethreat/graylog-build.git`
 3. `cd graylog-build/`
 
-### Setup App Server
+### [Step 1] Setup DB Server
+
+`python3 graylog_build.py <db> <APP IP Address>`
+
+To setup Elasticsearch on the db server, you'll need to give it the IP of the APP server. in our example, that IP is 192.168.1.1. So, on the db server run:
+
+`python3 graylog_build.py db 192.168.1.1`
+
+Auto install takes about 2 minutes. Elasticsearch auto-starts after install and configuration is complete.
+
+### [Step 2] Setup App Server
 
 `python3 graylog_build.py <app> <DB IP Address> <Graylog Web admin password>`
 
@@ -40,15 +50,14 @@ It will take about 15 minutes for everything to download and install. Graylog do
 
 Instructions are printed on the console on how to configure Graylog server to start on boot. Follow them!
 
-### Setup DB Server
+### [Step 3] Login and Configure Graylog
 
-`python3 graylog_build.py <db> <APP IP Address>`
+Now that the installs are finished, you should be able to browse to `http://192.168.1.1:9000`. Login with the username `admin` and the password you set in __Step 2__.
 
-To setup Elasticsearch on the db server, you'll need to give it the IP of the APP server. in our example, that IP is 192.168.1.1. So, on the db server run:
+Check out Graylog's [Online documentation](https://docs.graylog.org/en/3.0/pages/getting_started/web_console.html) to help you set up inputs and finish configuring it. 
 
-`python3 graylog_build.py db 192.168.1.1`
+Enjoy!
 
-Auto install takes about 2 minutes. Elasticsearch auto-starts after install and configuration is complete.
 
 #### Version History
 
@@ -57,3 +66,4 @@ Auto install takes about 2 minutes. Elasticsearch auto-starts after install and 
 * 0.2 - updated script to install latest Graylog (2.3.1) as well as the latest Elasticsearch (5.5.2). ES install routine adjusted, new memory mapping items added, too.
 * 0.3 - updated script to install latest Graylog (2.4). No other changes.
 * 0.4 - updated script to install latest Graylog (2.5) as well as the latest Elasticsearch (6.5.3).
+* 0.5 - updated script to install latest Graylog (3.0), latest MongoDB (4.0.6), and latest Elasticsearch (6.6.1). This build targets Ubuntu 18.04.2 and above, but should still work on Ubuntu 16.04 without too much of a fuss.

@@ -11,8 +11,8 @@ import socket
 ####################################################################################################################################################
 # Variables!
 
-graylogRepoUrl = "https://packages.graylog2.org/repo/packages/graylog-2.5-repository_latest.deb"
-graylogArchiveName = "graylog-2.5-repository_latest.deb"
+graylogRepoUrl = "https://packages.graylog2.org/repo/packages/graylog-3.0-repository_latest.deb"
+graylogArchiveName = "graylog-3.0-repository_latest.deb"
 
 ####################################################################################################################################################
 
@@ -111,6 +111,11 @@ def configureApp(myIP,myPass):
     myRestListenUri = getIpAddress()
     myRestListenUriInsert = 'rest_listen_uri = http://{0}:9000/api/'.format(myRestListenUri)
     filedata = filedata.replace('rest_listen_uri = http://127.0.0.1:9000/api/', myRestListenUriInsert)
+
+    # Replace the target string
+    myHttpBindAddress = getIpAddress()
+    myHttpBindAddressInsert = 'http_bind_address = {0}:9000'.format(myHttpBindAddress)
+    filedata = filedata.replace('#http_bind_address = 127.0.0.1:9000', myHttpBindAddressInsert)
     
     # Replace the target string
     myRestTransportUri = getIpAddress()
@@ -162,10 +167,10 @@ def installApp(myIP,myPass):
         
     
     ###
-    # MongoDB 3.4 Install and setup
+    # MongoDB 4.0.6 Install and setup
     print ("### Setting up MongoDB...")
-    subprocess.call('sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 0C49F3730359A14518585931BC711F9BA15703C6', shell=True)
-    subprocess.call('echo "deb [ arch=amd64,arm64 ] http://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.4 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.4.list',shell=True)
+    subprocess.call('sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 9DA31620334BD75D9DCB49F368818C72E52529D4', shell=True)
+    subprocess.call('echo "deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/4.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.0.list',shell=True)
     subprocess.call('apt-get update', shell=True)
     subprocess.call('apt-get install -y mongodb-org', shell=True)
     subprocess.call('systemctl enable mongod.service', shell=True)
