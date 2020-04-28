@@ -8,11 +8,12 @@ import subprocess
 import shutil
 import socket
 
+
 ####################################################################################################################################################
 # Variables!
 
-graylogRepoUrl = "https://packages.graylog2.org/repo/packages/graylog-2.4-repository_latest.deb"
-graylogArchiveName = "graylog-2.4-repository_latest.deb"
+graylogRepoUrl = "https://packages.graylog2.org/repo/packages/graylog-3.2-repository_latest.deb"
+graylogArchiveName = "graylog-3.2-repository_latest.deb"
 
 ####################################################################################################################################################
 
@@ -76,12 +77,13 @@ def installDB(myIP):
     
     print ("### Setting up Elasticsearch...")
     
-    # Elasticsearch 5 Install
-    subprocess.call('wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -',shell=True)
-    subprocess.call('echo "deb https://artifacts.elastic.co/packages/5.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-5.x.list',shell=True)
-    subprocess.call('apt-get update && sudo apt-get install elasticsearch',shell=True)
+    # Elasticsearch 6 Install
+    subprocess.call('wget -q https://artifacts.elastic.co/GPG-KEY-elasticsearch -O myKey',shell=True)
+    subprocess.call('apt-key add myKey',shell=True)
+    subprocess.call('echo "deb https://artifacts.elastic.co/packages/oss-6.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-6.x.list',shell=True)
+    subprocess.call('apt-get update && sudo apt-get install elasticsearch-oss',shell=True)
     subprocess.call('systemctl daemon-reload',shell=True)
-    subprocess.call('systemctl enable elasticsearch.service',shell=True)  
+    subprocess.call('systemctl enable elasticsearch.service',shell=True)
     
     configureDB(myIP)
 
@@ -106,21 +108,11 @@ def configureApp(myIP,myPass):
     myRootPasswordSha2 = hashlib.sha256(str(myPass).encode('utf-8')).hexdigest()
     myRootPasswordSha2Insert = 'root_password_sha2 = {0}'.format(myRootPasswordSha2)
     filedata = filedata.replace('root_password_sha2 =', myRootPasswordSha2Insert)
-    
+       
     # Replace the target string
-    myRestListenUri = getIpAddress()
-    myRestListenUriInsert = 'rest_listen_uri = http://{0}:9000/api/'.format(myRestListenUri)
-    filedata = filedata.replace('rest_listen_uri = http://127.0.0.1:9000/api/', myRestListenUriInsert)
-    
-    # Replace the target string
-    myRestTransportUri = getIpAddress()
-    myRestTransportUriInsert = 'rest_transport_uri = http://{0}:9000/api/'.format(myRestTransportUri)
-    filedata = filedata.replace('#rest_transport_uri = http://192.168.1.1:9000/api/', myRestTransportUriInsert)
-
-    # Replace the target string
-    myWebListenUri = getIpAddress()
-    myWebListenUriInsert = 'web_listen_uri = http://{0}:9000/'.format(myWebListenUri)
-    filedata = filedata.replace('#web_listen_uri = http://127.0.0.1:9000/', myWebListenUriInsert)
+    myHttpBindAddress = getIpAddress()
+    myHttpBindAddressInsert = 'http_bind_address = {0}:9000'.format(myHttpBindAddress)
+    filedata = filedata.replace('#http_bind_address = 127.0.0.1:9000', myHttpBindAddressInsert)
     
     # Replace the target string
     filedata = filedata.replace('elasticsearch_shards = 4','elasticsearch_shards = 1')
@@ -143,9 +135,21 @@ def installApp(myIP,myPass):
     print ("### Setting up Application Server. Database server is {0}. If this is incorrect, hit CTRL+C now. Otherwise, hit ENTER".format(myIP))
     input()
     
-    aptTransportHttpsResult = subprocess.call('apt-get install apt-transport-https', shell=True)
-    if aptTransportHttpsResult !=0:
+    # OK
+    aptAddUniverseRepoResult = subprocess.call('add-apt-repository universe -y', shell=True)
+    if aptAddUniverseRepoResult !=0:
         sys.exit("### Install failed! Check out the errors above!")
+    
+    # OK
+    aptGetUpdateResult = subprocess.call('apt-get update', shell=True)
+    if aptGetUpdateResult !=0:
+        sys.exit("### Install failed! Check out the errors above!")
+    
+    
+    aptGetPrerequisites = subprocess.call('apt-get install apt-transport-https openjdk-8-jre-headless uuid-runtime pwgen -y', shell=True)
+    if aptGetUpdateResult !=0:
+        sys.exit("### Install failed! Check out the errors above!")
+
     
     repoWgetDownloadBuild = "wget {0} -O /tmp/{1}".format(graylogRepoUrl,graylogArchiveName)
     repoWgetDownload = subprocess.call( repoWgetDownloadBuild, shell=True)
@@ -159,14 +163,15 @@ def installApp(myIP,myPass):
         
     
     ###
-    # MongoDB 3.4 Install and setup
+    # MongoDB 4.0 Install and setup
     print ("### Setting up MongoDB...")
-    subprocess.call('sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 0C49F3730359A14518585931BC711F9BA15703C6', shell=True)
-    subprocess.call('echo "deb [ arch=amd64,arm64 ] http://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.4 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.4.list',shell=True)
+    subprocess.call('apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 9DA31620334BD75D9DCB49F368818C72E52529D4', shell=True)
+    subprocess.call('echo "deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/4.0 multiverse" | tee /etc/apt/sources.list.d/mongodb-org-4.0.list',shell=True)
     subprocess.call('apt-get update', shell=True)
     subprocess.call('apt-get install -y mongodb-org', shell=True)
+    subprocess.call('systemctl daemon-reload', shell=True)
     subprocess.call('systemctl enable mongod.service', shell=True)
-    subprocess.call('service mongod start', shell=True)   
+    subprocess.call('systemctl restart mongod.service', shell=True)
     print ("### MongoDB setup complete!")
     ###
         
