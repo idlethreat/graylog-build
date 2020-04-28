@@ -1,41 +1,43 @@
 # Graylog Build Harness
 
-I manage a number of Graylog servers at work, and occasionally spin up VM's for various projects. So, I had a need to quickly push out a new Graylog system with little human intervention.
+I manage a number of Graylog servers at work, and occasionally spin up VM's for various projects. I had a need to quickly push out a new Graylog system with little human intervention. 
+
+Script currently targets [Ubuntu Linux 18.04](https://www.ubuntu.com/)
 
 This script helps automate a two server build-out of Graylog. The components are:
 
-1. Graylog Application Server - Has Graylog and Mongodb
-2. Graylog DB Server - Has Elasticsearch supported by Graylog
+1. __Graylog Application Server__ - Has Graylog and Mongodb installed
+2. __Graylog DB Server__ - Has Elasticsearch installed
 
 Plans are to keep tracking the latest version available at [https://www.graylog.org/download](https://www.graylog.org/download).
 
 ## Build Target
 
+<<<<<<< HEAD
 * Ubuntu 18.04 LTS
 * Graylog v3.2
 * Mongodb 4
 * Elasticsearch 6
+=======
+* Ubuntu 18.04 LTS (Bionic)
+* Graylog v3.0 (Released Feb, 2019)
+* Mongodb 4.0.6
+* Elasticsearch 6.6.1
+>>>>>>> c5680a0cc5c5db8d2e9f037cc19521909a231c13
 
 ## Instructions
 
-In our example, 192.168.1.1 will be our app server, and 192.168.1.2 will be the DB server. From a fresh install, run the following commands:
+In our below example, 192.168.1.1 will be our __app__ server, and 192.168.1.2 will be the __DB__ server. From a fresh install, run the following commands:
 
-### Initial Setup (run on both app and db servers)
+### [Step 0] Initial Setup
+
+_run the following commands on both app and db servers_
+
 1. `apt-get install git -y`
-2. `git clone git clone https://github.com/idlethreat/graylog-build.git`
+2. `git clone https://github.com/idlethreat/graylog-build.git`
 3. `cd graylog-build/`
 
-### Setup App Server
-
-`python3 graylog_build.py <app> <DB IP Address> <Graylog Web admin password>`
-
-To setup the app server, you'll need to give it the IP of the DB server. In our example, that IP is 192.168.1.2. So, on the app server, run:
-
-`python3 graylog_build.py app 192.168.1.2 password1`
-
-It will take about 15 minutes for everything to download and install. Graylog does __not__ automatically start up after install. Instructions are printed on the console on how to configure Graylog server to start on boot.
-
-### Setup DB Server
+### [Step 1] Setup DB Server
 
 `python3 graylog_build.py <db> <APP IP Address>`
 
@@ -45,10 +47,36 @@ To setup Elasticsearch on the db server, you'll need to give it the IP of the AP
 
 Auto install takes about 2 minutes. Elasticsearch auto-starts after install and configuration is complete.
 
-### Version History
+### [Step 2] Setup App Server
+
+`python3 graylog_build.py <app> <DB IP Address> <Graylog Web admin password>`
+
+To setup the app server, you'll need to give it the IP of the DB server. In our example, that IP is 192.168.1.2. So, on the app server, run something like this (with a better password):
+
+`python3 graylog_build.py app 192.168.1.2 password1`
+
+It will take about 15 minutes for everything to download and install. Graylog does __not__ automatically start up after install. 
+
+Instructions are printed on the console on how to configure Graylog server to start on boot. Follow them!
+
+### [Step 3] Login and Configure Graylog
+
+Now that the installs are finished, you should be able to browse to `http://192.168.1.1:9000`. Login with the username `admin` and the password you set in __Step 2__.
+
+Check out Graylog's [Online documentation](https://docs.graylog.org/en/3.0/pages/getting_started/web_console.html) to help you set up inputs and finish configuring it. 
+
+Enjoy!
+
+
+#### Version History
 
 * 0.0 - initial release
 * 0.1 - updated script to install latest MongoDB (3.4.7) from mongodb.org instead of using the older default 16.04 packages
 * 0.2 - updated script to install latest Graylog (2.3.1) as well as the latest Elasticsearch (5.5.2). ES install routine adjusted, new memory mapping items added, too.
 * 0.3 - updated script to install latest Graylog (2.4). No other changes.
+<<<<<<< HEAD
 * 0.4 - updated script to install latest Graylog (3.2), MongoDB (4) and Elasticsearch (6). Updated installer to handle variable changes in a couple of config files.
+=======
+* 0.4 - updated script to install latest Graylog (2.5) as well as the latest Elasticsearch (6.5.3).
+* 0.5 - updated script to install latest Graylog (3.0), latest MongoDB (4.0.6), and latest Elasticsearch (6.6.1). This build targets Ubuntu 18.04.2 and above, but should still work on Ubuntu 16.04 without too much of a fuss.
+>>>>>>> c5680a0cc5c5db8d2e9f037cc19521909a231c13
