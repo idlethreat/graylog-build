@@ -13,17 +13,10 @@ Plans are to keep tracking the latest version available at [https://www.graylog.
 
 ## Build Target
 
-<<<<<<< HEAD
 * Ubuntu 18.04 LTS
 * Graylog v3.2
 * Mongodb 4
 * Elasticsearch 6
-=======
-* Ubuntu 18.04 LTS (Bionic)
-* Graylog v3.0 (Released Feb, 2019)
-* Mongodb 4.0.6
-* Elasticsearch 6.6.1
->>>>>>> c5680a0cc5c5db8d2e9f037cc19521909a231c13
 
 ## Instructions
 
@@ -74,9 +67,4 @@ Enjoy!
 * 0.1 - updated script to install latest MongoDB (3.4.7) from mongodb.org instead of using the older default 16.04 packages
 * 0.2 - updated script to install latest Graylog (2.3.1) as well as the latest Elasticsearch (5.5.2). ES install routine adjusted, new memory mapping items added, too.
 * 0.3 - updated script to install latest Graylog (2.4). No other changes.
-<<<<<<< HEAD
 * 0.4 - updated script to install latest Graylog (3.2), MongoDB (4) and Elasticsearch (6). Updated installer to handle variable changes in a couple of config files.
-=======
-* 0.4 - updated script to install latest Graylog (2.5) as well as the latest Elasticsearch (6.5.3).
-* 0.5 - updated script to install latest Graylog (3.0), latest MongoDB (4.0.6), and latest Elasticsearch (6.6.1). This build targets Ubuntu 18.04.2 and above, but should still work on Ubuntu 16.04 without too much of a fuss.
->>>>>>> c5680a0cc5c5db8d2e9f037cc19521909a231c13

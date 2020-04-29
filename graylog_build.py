@@ -12,13 +12,8 @@ import socket
 ####################################################################################################################################################
 # Variables!
 
-<<<<<<< HEAD
 graylogRepoUrl = "https://packages.graylog2.org/repo/packages/graylog-3.2-repository_latest.deb"
 graylogArchiveName = "graylog-3.2-repository_latest.deb"
-=======
-graylogRepoUrl = "https://packages.graylog2.org/repo/packages/graylog-3.0-repository_latest.deb"
-graylogArchiveName = "graylog-3.0-repository_latest.deb"
->>>>>>> c5680a0cc5c5db8d2e9f037cc19521909a231c13
 
 ####################################################################################################################################################
 
@@ -82,18 +77,11 @@ def installDB(myIP):
     
     print ("### Setting up Elasticsearch...")
     
-<<<<<<< HEAD
     # Elasticsearch 6 Install
     subprocess.call('wget -q https://artifacts.elastic.co/GPG-KEY-elasticsearch -O myKey',shell=True)
     subprocess.call('apt-key add myKey',shell=True)
     subprocess.call('echo "deb https://artifacts.elastic.co/packages/oss-6.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-6.x.list',shell=True)
     subprocess.call('apt-get update && sudo apt-get install elasticsearch-oss',shell=True)
-=======
-    # Elasticsearch 5 Install
-    subprocess.call('wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -',shell=True)
-    subprocess.call('echo "deb https://artifacts.elastic.co/packages/6.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-6.x.list',shell=True)
-    subprocess.call('apt-get update && sudo apt-get install elasticsearch',shell=True)
->>>>>>> c5680a0cc5c5db8d2e9f037cc19521909a231c13
     subprocess.call('systemctl daemon-reload',shell=True)
     subprocess.call('systemctl enable elasticsearch.service',shell=True)
     
@@ -120,26 +108,7 @@ def configureApp(myIP,myPass):
     myRootPasswordSha2 = hashlib.sha256(str(myPass).encode('utf-8')).hexdigest()
     myRootPasswordSha2Insert = 'root_password_sha2 = {0}'.format(myRootPasswordSha2)
     filedata = filedata.replace('root_password_sha2 =', myRootPasswordSha2Insert)
-<<<<<<< HEAD
-       
-=======
-    
-    # Replace the target string
-    myRestListenUri = getIpAddress()
-    myRestListenUriInsert = 'rest_listen_uri = http://{0}:9000/api/'.format(myRestListenUri)
-    filedata = filedata.replace('rest_listen_uri = http://127.0.0.1:9000/api/', myRestListenUriInsert)
 
-    # Replace the target string
-    myHttpBindAddress = getIpAddress()
-    myHttpBindAddressInsert = 'http_bind_address = {0}:9000'.format(myHttpBindAddress)
-    filedata = filedata.replace('#http_bind_address = 127.0.0.1:9000', myHttpBindAddressInsert)
-    
-    # Replace the target string
-    myRestTransportUri = getIpAddress()
-    myRestTransportUriInsert = 'rest_transport_uri = http://{0}:9000/api/'.format(myRestTransportUri)
-    filedata = filedata.replace('#rest_transport_uri = http://192.168.1.1:9000/api/', myRestTransportUriInsert)
-
->>>>>>> c5680a0cc5c5db8d2e9f037cc19521909a231c13
     # Replace the target string
     myHttpBindAddress = getIpAddress()
     myHttpBindAddressInsert = 'http_bind_address = {0}:9000'.format(myHttpBindAddress)
@@ -197,17 +166,10 @@ def installApp(myIP,myPass):
         
     
     ###
-<<<<<<< HEAD
     # MongoDB 4.0 Install and setup
     print ("### Setting up MongoDB...")
     subprocess.call('apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 9DA31620334BD75D9DCB49F368818C72E52529D4', shell=True)
     subprocess.call('echo "deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/4.0 multiverse" | tee /etc/apt/sources.list.d/mongodb-org-4.0.list',shell=True)
-=======
-    # MongoDB 4.0.6 Install and setup
-    print ("### Setting up MongoDB...")
-    subprocess.call('sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 9DA31620334BD75D9DCB49F368818C72E52529D4', shell=True)
-    subprocess.call('echo "deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/4.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.0.list',shell=True)
->>>>>>> c5680a0cc5c5db8d2e9f037cc19521909a231c13
     subprocess.call('apt-get update', shell=True)
     subprocess.call('apt-get install -y mongodb-org', shell=True)
     subprocess.call('systemctl daemon-reload', shell=True)
